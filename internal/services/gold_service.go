@@ -9,8 +9,6 @@ import (
 	"github.com/nelsonmarro/gold-watcher/internal/models"
 )
 
-var currency = "USD"
-
 type GoldService struct {
 	client *client.HttpClient
 }
@@ -20,7 +18,7 @@ func NewGoldService(client *client.HttpClient) *GoldService {
 }
 
 func (s *GoldService) GetPrices() (*models.Price, error) {
-	data, err := s.client.Get(currency)
+	data, err := s.client.Get(helpers.CURRENCY)
 	if err != nil {
 		log.Println("error contacting goldprice.org: ", err)
 		return nil, err
@@ -35,7 +33,7 @@ func (s *GoldService) GetPrices() (*models.Price, error) {
 	previous, current, change := gold.Prices[0].PreviousClose, gold.Prices[0].Price, gold.Prices[0].Change
 
 	currentInfo := models.Price{
-		Currency:      currency,
+		Currency:      helpers.CURRENCY,
 		Price:         current,
 		Change:        change,
 		PreviousClose: previous,

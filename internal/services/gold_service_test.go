@@ -8,7 +8,7 @@ import (
 	"time"
 
 	client "github.com/nelsonmarro/gold-watcher/internal/http"
-	"github.com/nelsonmarro/gold-watcher/test"
+	"github.com/nelsonmarro/gold-watcher/test/mocks"
 )
 
 func TestGold_GetPrices(t *testing.T) {
@@ -21,7 +21,7 @@ func TestGold_GetPrices(t *testing.T) {
 		Header:     make(http.Header),
 	}
 
-	mockTransport := &test.FakeTransport{
+	mockTransport := &mocks.FakeTransport{
 		Response: fakeResponse,
 		Err:      nil,
 	}
