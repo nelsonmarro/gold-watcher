@@ -8,8 +8,9 @@ import (
 
 func TestApp_getPriceText(t *testing.T) {
 	goldService := mocks.NewMockGoldService()
+	testApp.GoldService = goldService
 
-	open, current, change := testApp.getPriceText(goldService)
+	open, current, change := testApp.getPriceText()
 
 	if open.Text != "Open: $2634.6325 USD" {
 		t.Errorf("Expected Open: $2634.6325 USD, got %s", open.Text)

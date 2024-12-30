@@ -5,13 +5,15 @@ import (
 	"time"
 )
 
-var Base_url = "https://data-asg.goldprice.org/dbXRates/"
+var base_url = ""
 
 type HttpClient struct {
 	http http.Client
 }
 
-func NewHttpClient(timeout time.Duration) *HttpClient {
+func NewHttpClient(baseUrl string, timeout time.Duration) *HttpClient {
+	base_url = baseUrl
+
 	return &HttpClient{
 		http: http.Client{
 			Timeout: timeout,

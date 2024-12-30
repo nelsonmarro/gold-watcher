@@ -2,12 +2,14 @@ package services
 
 import (
 	"bytes"
+	"image/png"
 	"io"
 	"net/http"
 	"testing"
 	"time"
 
 	client "github.com/nelsonmarro/gold-watcher/internal/http"
+	"github.com/nelsonmarro/gold-watcher/internal/resources"
 	"github.com/nelsonmarro/gold-watcher/test/mocks"
 )
 
@@ -36,5 +38,38 @@ func TestGold_GetPrices(t *testing.T) {
 
 	if data.Price != 2622.18 {
 		t.Errorf("expected price: 2622.18, got: %v", data.Price)
+	}
+}
+
+func TestGoldService_GetGoldChartImage(t *testing.T) {
+	imageBytes := resources.ResourceUnreachablePng.StaticContent
+
+	_, err := png.Decode(bytes.NewReader(imageBytes))
+	if err != nil {
+		t.Fatalf("Error decoding image as PNG: %v", err)
+	}
+
+	fakeResponse := &http.Response{
+		StatusCode: http.StatusOK,
+		Body:       io.NopCloser(bytes.NewReader(imageBytes)),
+		Header:     make(http.Header),
+	}
+	fakeResponse.Header.Set("Content-Type", "image/png")
+
+	mockTransport := &mocks.FakeTransport{
+		Response: fakeResponse,
+		Err:      nil,
+	}
+
+	mockClient := client.NewHttpClientWithTransport(15*time.Second, mockTransport)
+	goldService := NewGoldService(mockClient)
+
+	img, err := goldService.GetGoldChartImage("https://goldprice.org/charts/gold_3d_b_o_usd_x.png")
+	if err != nil {
+		t.Errorf("error while getting the image: %v", err)
+	}
+
+	if img == nil {
+		t.Errorf("expected image, got nil")
 	}
 }

@@ -1,6 +1,7 @@
 package mocks
 
 import (
+	"image"
 	"net/http"
 	"time"
 
@@ -37,4 +38,8 @@ func (m *MockGoldService) GetPrices() (*models.Price, error) {
 	m.Price.Time = time.Now()
 
 	return m.Price, m.Err
+}
+
+func (m *MockGoldService) GetGoldChartImage(URL string) (image.Image, error) {
+	return nil, nil
 }

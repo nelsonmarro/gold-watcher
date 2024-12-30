@@ -2,7 +2,10 @@ module github.com/nelsonmarro/gold-watcher
 
 go 1.23.4
 
-require fyne.io/fyne/v2 v2.5.3
+require (
+	fyne.io/fyne/v2 v2.5.3
+	github.com/mattn/go-sqlite3 v1.14.24
+)
 
 require (
 	fyne.io/systray v1.11.0 // indirect

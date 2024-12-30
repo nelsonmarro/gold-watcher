@@ -6,8 +6,10 @@ import (
 	"net/http"
 )
 
-func (c *HttpClient) Get(url string) ([]byte, error) {
-	url = Base_url + url
+func (c *HttpClient) Get(url string, appendBaseUrl bool) ([]byte, error) {
+	if appendBaseUrl {
+		url = base_url + url
+	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -28,6 +30,7 @@ func (c *HttpClient) Get(url string) ([]byte, error) {
 	if response.StatusCode > 299 {
 		return nil, fmt.Errorf(
 			"response failed with status code: %d and\nbody: %s",
+
 			response.StatusCode,
 			body,
 		)

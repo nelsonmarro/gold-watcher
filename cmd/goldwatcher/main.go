@@ -1,21 +1,25 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"github.com/nelsonmarro/gold-watcher/internal/contracts"
+
 	client "github.com/nelsonmarro/gold-watcher/internal/http"
+	"github.com/nelsonmarro/gold-watcher/internal/repository"
 	"github.com/nelsonmarro/gold-watcher/internal/services"
 	"github.com/nelsonmarro/gold-watcher/internal/ui"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
-var myApp ui.Config
-
 func main() {
+	var myApp ui.Config
+
 	// create a fyne application
 	a := app.NewWithID("lilim.code.goldwatcher.preferences")
 	myApp.App = a
@@ -25,12 +29,14 @@ func main() {
 	myApp.ErrorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	// open a connection to the database
-
-	// create a database repository
+	db, err := createSqlConn(&myApp)
+	if err != nil {
+		log.Panic(err)
+	}
+	defer db.Close()
 
 	// dependency injection
-	client := client.NewHttpClient(5 * time.Second)
-	var goldService contracts.GoldService = services.NewGoldService(client)
+	setupDependencyInjection(&myApp, db)
 
 	// create and size a fyne window
 	myApp.MainWindow = a.NewWindow("Gold Watcher")
@@ -39,8 +45,46 @@ func main() {
 	myApp.MainWindow.CenterOnScreen()
 	myApp.MainWindow.SetMaster()
 
-	myApp.MakeUI(goldService)
+	myApp.MakeUI()
 
 	// show and run the application
 	myApp.MainWindow.ShowAndRun()
+}
+
+func createSqlConn(app *ui.Config) (*sql.DB, error) {
+	path := ""
+
+	if os.Getenv("DB_PATH") != "" {
+		path = os.Getenv("DB_PATH")
+	} else {
+		path = app.App.Storage().RootURI().Path() + "/sql.db"
+		app.InfoLog.Println("DB in: ", path)
+	}
+
+	db, err := sql.Open("sqlite3", path)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+func setupDependencyInjection(app *ui.Config, db *sql.DB) {
+	client := client.NewHttpClient("https://data-asg.goldprice.org/dbXRates/", 5*time.Second)
+	var goldService services.GoldService = services.NewGoldService(client)
+
+	app.GoldService = goldService
+
+	setupDB(app, db)
+}
+
+func setupDB(app *ui.Config, db *sql.DB) {
+	app.HoldingRepository = repository.NewHoldingRepository(db)
+
+	dbInitializer := repository.NewDbInitializer(db)
+	err := dbInitializer.Migrate()
+	if err != nil {
+		app.ErrorLog.Println(err)
+		log.Panic(err)
+	}
 }

@@ -6,14 +6,13 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
-	"github.com/nelsonmarro/gold-watcher/internal/contracts"
 	"github.com/nelsonmarro/gold-watcher/internal/helpers"
 )
 
-func (app *Config) getPriceText(goldService contracts.GoldService) (*canvas.Text, *canvas.Text, *canvas.Text) {
+func (app *Config) getPriceText() (*canvas.Text, *canvas.Text, *canvas.Text) {
 	var open, current, change *canvas.Text
 
-	gold, err := goldService.GetPrices()
+	gold, err := app.GoldService.GetPrices()
 	if err != nil {
 		grey := color.NRGBA{R: 155, G: 155, B: 155, A: 255}
 		open = canvas.NewText("Open: Unreachable", grey)
