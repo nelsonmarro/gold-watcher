@@ -9,16 +9,16 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 
+	"github.com/nelsonmarro/gold-watcher/internal/application"
 	client "github.com/nelsonmarro/gold-watcher/internal/http"
 	"github.com/nelsonmarro/gold-watcher/internal/repository"
 	"github.com/nelsonmarro/gold-watcher/internal/services"
-	"github.com/nelsonmarro/gold-watcher/internal/ui"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	var myApp ui.Config
+	var myApp application.Config
 
 	// create a fyne application
 	a := app.NewWithID("lilim.code.goldwatcher.preferences")
@@ -51,7 +51,7 @@ func main() {
 	myApp.MainWindow.ShowAndRun()
 }
 
-func createSqlConn(app *ui.Config) (*sql.DB, error) {
+func createSqlConn(app *application.Config) (*sql.DB, error) {
 	path := ""
 
 	if os.Getenv("DB_PATH") != "" {
@@ -69,7 +69,7 @@ func createSqlConn(app *ui.Config) (*sql.DB, error) {
 	return db, nil
 }
 
-func setupDependencyInjection(app *ui.Config, db *sql.DB) {
+func setupDependencyInjection(app *application.Config, db *sql.DB) {
 	client := client.NewHttpClient("https://data-asg.goldprice.org/dbXRates/", 5*time.Second)
 	var goldService services.GoldService = services.NewGoldService(client)
 
@@ -78,7 +78,7 @@ func setupDependencyInjection(app *ui.Config, db *sql.DB) {
 	setupDB(app, db)
 }
 
-func setupDB(app *ui.Config, db *sql.DB) {
+func setupDB(app *application.Config, db *sql.DB) {
 	app.HoldingRepository = repository.NewHoldingRepository(db)
 
 	dbInitializer := repository.NewDbInitializer(db)

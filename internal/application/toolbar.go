@@ -1,4 +1,4 @@
-package ui
+package application
 
 import (
 	"fyne.io/fyne/v2/theme"
