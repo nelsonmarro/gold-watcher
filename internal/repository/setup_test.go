@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	testRepo         HoldingRepository
+	testRepo         Repository
 	testDBInitalizer DBInitializer
 )
 

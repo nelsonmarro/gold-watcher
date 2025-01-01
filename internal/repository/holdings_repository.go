@@ -13,7 +13,7 @@ var (
 	errDeleteFailed = errors.New("failed to delete the holding")
 )
 
-type HoldingRepository interface {
+type Repository interface {
 	Create(holding models.Holding) (*models.Holding, error)
 	GetAll() ([]models.Holding, error)
 	GetByID(id int64) (*models.Holding, error)

@@ -18,6 +18,23 @@ func (r *TestRepository) Create(holding models.Holding) (*models.Holding, error)
 
 func (r *TestRepository) GetAll() ([]models.Holding, error) {
 	holdings := make([]models.Holding, 0)
+
+	h := models.Holding{
+		ID:            1,
+		Amount:        1,
+		PurchasePrice: 1000,
+		PurchaseDate:  time.Now(),
+	}
+	holdings = append(holdings, h)
+
+	h = models.Holding{
+		ID:            2,
+		Amount:        2,
+		PurchasePrice: 2000,
+		PurchaseDate:  time.Now(),
+	}
+	holdings = append(holdings, h)
+
 	return holdings, nil
 }
 

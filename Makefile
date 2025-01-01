@@ -8,8 +8,8 @@ build:
 	@cd ${SOURCE_DIR} && fyne package -os linux --release
 
 run:
-	@echo "Running $(BINARY_NAME)..."
-	@go run $(SOURCE_DIR)
+	echo "Running $(BINARY_NAME)..."
+	@env DB_PATH="./sql.db" go run $(SOURCE_DIR)
 
 clean:
 	@echo "Cleaning up..."

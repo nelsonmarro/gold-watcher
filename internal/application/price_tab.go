@@ -33,7 +33,7 @@ func (app *Config) getChart() *canvas.Image {
 		img = canvas.NewImageFromFile("gold_chart.png")
 	}
 
-	img.SetMinSize(fyne.NewSize(800, 500))
+	img.SetMinSize(fyne.NewSize(770, 410))
 	img.FillMode = canvas.ImageFillStretch
 
 	return img
