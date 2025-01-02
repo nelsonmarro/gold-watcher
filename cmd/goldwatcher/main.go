@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/app"
 
 	"github.com/nelsonmarro/gold-watcher/internal/application"
+	"github.com/nelsonmarro/gold-watcher/internal/helpers"
 	client "github.com/nelsonmarro/gold-watcher/internal/http"
 	"github.com/nelsonmarro/gold-watcher/internal/repository"
 	"github.com/nelsonmarro/gold-watcher/internal/services"
@@ -46,6 +47,8 @@ func main() {
 	myApp.MainWindow.SetMaster()
 
 	myApp.MakeUI()
+
+	helpers.Currency = a.Preferences().StringWithFallback("currency", "CAD")
 
 	// show and run the application
 	myApp.MainWindow.ShowAndRun()

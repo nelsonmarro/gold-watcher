@@ -11,6 +11,10 @@ run:
 	echo "Running $(BINARY_NAME)..."
 	@env DB_PATH="./sql.db" go run $(SOURCE_DIR)
 
+install:
+	@echo "Building $(BINARY_NAME) with Fyne..."
+	@cd ${SOURCE_DIR} && sudo fyne install
+
 clean:
 	@echo "Cleaning up..."
 	@go clean

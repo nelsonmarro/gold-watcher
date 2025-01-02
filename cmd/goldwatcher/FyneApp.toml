@@ -1,0 +1,14 @@
+Website = "https://example.com"
+
+[Details]
+  Icon = "../../assets/icon.png"
+  Name = "Gold Watcher"
+  ID = "lilim.code.goldwatcher.app"
+  Version = "1.0.0"
+  Build = 9
+
+[LinuxAndBSD]
+  GenericName = "Gold Watcher"
+  Categories = ["Watcher", "Gold"]
+  Comment = "Trackt the price of gold"
+  Keywords = ["watcher", "gold"]

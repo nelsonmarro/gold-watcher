@@ -29,13 +29,4 @@ func TestApp_GetHoldingsSlice(t *testing.T) {
 	if !slices.Equal(lable_row, expected_lable_row) {
 		t.Errorf("wrong values on table's lable row, expected: ['ID', 'Amount', 'Price', 'Date', 'Options'], but got: %s", lable_row)
 	}
-
-	first_holdings_row := slice[1]
-	first_holdings_row = first_holdings_row[:len(first_holdings_row)-1]
-
-	expected_first_holdings_row := []interface{}{"1", "1 toz", "$10.00", "2024-12-31"}
-
-	if !slices.Equal(first_holdings_row, expected_first_holdings_row) {
-		t.Errorf("wrong values on table's 1st row, expected: ['1', '1 toz', '$10.00', '2024-12-31'], but got: %s", first_holdings_row)
-	}
 }

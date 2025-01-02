@@ -22,7 +22,7 @@ func (app *Config) pricesTab() *fyne.Container {
 }
 
 func (app *Config) getChart() *canvas.Image {
-	apiUrl := fmt.Sprintf("https://goldprice.org/charts/gold_3d_b_o_%s_x.png", strings.ToLower(helpers.CURRENCY))
+	apiUrl := fmt.Sprintf("https://goldprice.org/charts/gold_3d_b_o_%s_x.png", strings.ToLower(helpers.Currency))
 	var img *canvas.Image
 
 	err := app.downloadFile(apiUrl, "gold_chart.png")

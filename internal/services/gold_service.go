@@ -25,7 +25,7 @@ func NewGoldService(client *client.HttpClient) *goldService {
 }
 
 func (s *goldService) GetPrices() (*models.Price, error) {
-	data, err := s.client.Get(helpers.CURRENCY, true)
+	data, err := s.client.Get(helpers.Currency, true)
 	if err != nil {
 		log.Println("error contacting goldprice.org: ", err)
 		return nil, err
@@ -40,7 +40,7 @@ func (s *goldService) GetPrices() (*models.Price, error) {
 	previous, current, change := gold.Prices[0].PreviousClose, gold.Prices[0].Price, gold.Prices[0].Change
 
 	currentInfo := models.Price{
-		Currency:      helpers.CURRENCY,
+		Currency:      helpers.Currency,
 		Price:         current,
 		Change:        change,
 		PreviousClose: previous,

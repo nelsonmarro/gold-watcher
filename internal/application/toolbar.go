@@ -5,10 +5,12 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
+	"github.com/nelsonmarro/gold-watcher/internal/helpers"
 	"github.com/nelsonmarro/gold-watcher/internal/models"
 )
 
@@ -21,16 +23,45 @@ func (app *Config) getToolBar() *widget.Toolbar {
 		widget.NewToolbarAction(theme.ViewRefreshIcon(), func() {
 			app.refreshPriceContent()
 		}),
-		widget.NewToolbarAction(theme.SettingsIcon(), func() {}),
+		widget.NewToolbarAction(theme.SettingsIcon(), func() {
+			w := app.showPreferences()
+			w.Resize(fyne.Size{Width: 300, Height: 200})
+			w.Show()
+		}),
 	)
 
 	return toolBar
 }
 
+func (app *Config) showPreferences() fyne.Window {
+	win := app.App.NewWindow("Preferences")
+
+	lbl := widget.NewLabel("Preferred Currency")
+	curr := widget.NewSelect([]string{
+		"USD",
+		"CAD",
+		"GBP",
+	}, func(value string) {
+		helpers.Currency = value
+		app.App.Preferences().SetString("currency", value)
+	})
+	curr.Selected = helpers.Currency
+
+	btn := widget.NewButton("Save", func() {
+		win.Close()
+		app.refreshPriceContent()
+	})
+	btn.Importance = widget.HighImportance
+
+	win.SetContent(container.NewVBox(lbl, curr, btn))
+
+	return win
+}
+
 func (app *Config) addHoldingsDialog() dialog.Dialog {
-	addAmountEntry := widget.NewEntry()
 	purchaseDateEntry := widget.NewEntry()
 	purchasePriceEntry := widget.NewEntry()
+	addAmountEntry := widget.NewEntry()
 
 	app.AddHoldingsPurchaseAmountEntry = addAmountEntry
 	app.AddHoldingsPurchaseDateEntry = purchaseDateEntry
@@ -77,6 +108,7 @@ func (app *Config) addHoldingsDialog() dialog.Dialog {
 				amount, _ := strconv.Atoi(addAmountEntry.Text)
 				date, _ := time.Parse("2006-01-02", purchaseDateEntry.Text)
 				price, _ := strconv.ParseFloat(purchasePriceEntry.Text, 64)
+				price *= 100
 
 				_, err := app.HoldingRepository.Create(models.Holding{
 					Amount:        amount,

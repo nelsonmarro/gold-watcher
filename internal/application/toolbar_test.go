@@ -1,11 +1,35 @@
 package application
 
-import "testing"
+import (
+	"testing"
+
+	"fyne.io/fyne/v2/test"
+)
 
 func TestApp_getToolBar(t *testing.T) {
 	tb := testApp.getToolBar()
 
 	if len(tb.Items) != 4 {
 		t.Errorf("Expected 4 items, got %d", len(tb.Items))
+	}
+}
+
+func TestApp_addHoldingsDialog(t *testing.T) {
+	testApp.addHoldingsDialog()
+
+	test.Type(testApp.AddHoldingsPurchaseAmountEntry, "1")
+	test.Type(testApp.AddHoldingsPurchasePriceEntry, "1000")
+	test.Type(testApp.AddHoldingsPurchaseDateEntry, "2020-01-01")
+
+	if testApp.AddHoldingsPurchaseDateEntry.Text != "2020-01-01" {
+		t.Errorf("expected date entry to have the value: 2020-01-01, but got: %s", testApp.AddHoldingsPurchaseDateEntry.Text)
+	}
+
+	if testApp.AddHoldingsPurchaseAmountEntry.Text != "1" {
+		t.Errorf("expected amount entry to have the value: 1, but got: %s", testApp.AddHoldingsPurchaseAmountEntry.Text)
+	}
+
+	if testApp.AddHoldingsPurchasePriceEntry.Text != "1000" {
+		t.Errorf("expected price entry to have the value: 1000, but got: %s", testApp.AddHoldingsPurchasePriceEntry.Text)
 	}
 }

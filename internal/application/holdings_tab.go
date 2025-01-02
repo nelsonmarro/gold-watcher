@@ -88,7 +88,9 @@ func (app *Config) getHoldingsSlice() [][]interface{} {
 
 		currentRow = append(currentRow, strconv.FormatInt(x.ID, 10))
 		currentRow = append(currentRow, fmt.Sprintf("%v toz", x.Amount))
-		currentRow = append(currentRow, fmt.Sprintf("$%2f", float32(x.PurchasePrice/100)))
+
+		amount := x.PurchasePrice / 100
+		currentRow = append(currentRow, fmt.Sprintf("$%2f", amount))
 		currentRow = append(currentRow, x.PurchaseDate.Format("2006-01-02"))
 		currentRow = append(currentRow, widget.NewButton("Delete", func() {
 		}))
